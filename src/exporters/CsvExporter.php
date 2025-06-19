@@ -5,7 +5,7 @@ namespace hiqdev\yii2\export\exporters;
 use Box\Spout\Common\Exception\IOException;
 use Box\Spout\Common\Exception\UnsupportedTypeException;
 use Box\Spout\Writer\Exception\WriterNotOpenedException;
-use Box\Spout\Writer\WriterFactory;
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 
 class CsvExporter extends AbstractExporter implements ExporterInterface
 {
@@ -24,29 +24,31 @@ class CsvExporter extends AbstractExporter implements ExporterInterface
     {
         $this->initExportOptions($gird);
 
-        $this->writer = WriterFactory::create(Type::CSV);
+        $this->writer = WriterEntityFactory::createCSVWriter();
         $this->applySettings();
         ob_start();
         $this->writer->openToBrowser('php://output');
 
+        $rows = [];
         //header
         $headerRow = $this->generateHeader();
         if (!empty($headerRow)) {
-            $this->writer->addRow($headerRow);
+            $rows[] = WriterEntityFactory::createRowFromArray($headerRow);
         }
 
         //body
         $bodyRows = $this->generateBody();
         foreach ($bodyRows as $row) {
-            $this->writer->addRow($row);
+            $rows[] = WriterEntityFactory::createRowFromArray($row);
         }
 
         //footer
         $footerRow = $this->generateFooter();
         if (!empty($footerRow)) {
-            $this->writer->addRow($footerRow);
+            $rows[] = WriterEntityFactory::createRowFromArray($footerRow);
         }
 
+        $this->writer->addRows($rows);
         $this->writer->close();
 
         return ob_get_clean();

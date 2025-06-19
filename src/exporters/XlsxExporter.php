@@ -2,7 +2,7 @@
 
 namespace hiqdev\yii2\export\exporters;
 
-use Box\Spout\Writer\WriterFactory;
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 
 class XlsxExporter extends AbstractExporter implements ExporterInterface
 {
@@ -15,30 +15,31 @@ class XlsxExporter extends AbstractExporter implements ExporterInterface
     {
         $this->initExportOptions($gird);
 
-        $writer = WriterFactory::create(Type::XLSX);
+        $writer = WriterEntityFactory::createXLSXWriter();
         ob_start();
-        $writer->openToBrowser('php://output');
+        $this->writer->openToBrowser('php://output');
 
+        $rows = [];
         //header
         $headerRow = $this->generateHeader();
         if (!empty($headerRow)) {
-            $writer->addRow($headerRow);
+            $rows[] = WriterEntityFactory::createRowFromArray($headerRow);
         }
 
         //body
         $bodyRows = $this->generateBody();
         foreach ($bodyRows as $row) {
-            $writer->addRow($row);
+            $rows[] = WriterEntityFactory::createRowFromArray($row);
         }
 
         //footer
         $footerRow = $this->generateFooter();
         if (!empty($footerRow)) {
-            $writer->addRow($footerRow);
+            $rows[] = WriterEntityFactory::createRowFromArray($footerRow);
         }
 
-        $writer->close();
-        $result = ob_get_clean();
+        $this->writer->addRows($rows);
+        $this->writer->close();
 
         return $result;
     }
