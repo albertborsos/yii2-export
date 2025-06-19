@@ -2,10 +2,10 @@
 
 namespace hiqdev\yii2\export\exporters;
 
-use Box\Spout\Common\Exception\IOException;
-use Box\Spout\Common\Exception\UnsupportedTypeException;
-use Box\Spout\Writer\Exception\WriterNotOpenedException;
-use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+use OpenSpout\Common\Exception\IOException;
+use OpenSpout\Common\Exception\UnsupportedTypeException;
+use OpenSpout\Writer\Exception\WriterNotOpenedException;
+use OpenSpout\Writer\Common\Creator\WriterEntityFactory;
 
 class CsvExporter extends AbstractExporter implements ExporterInterface
 {

@@ -2,7 +2,7 @@
 
 namespace hiqdev\yii2\export\exporters;
 
-use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+use OpenSpout\Writer\Common\Creator\WriterEntityFactory;
 
 class XlsxExporter extends AbstractExporter implements ExporterInterface
 {
